@@ -1,6 +1,6 @@
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
-
 
 public class LoveLetter {
 
@@ -8,7 +8,13 @@ public class LoveLetter {
 	static int numeroTokens = 1;
 	static boolean verificadorTokkens;
 	
-	static Carta[] mazo = new Carta[15];
+	static Carta[] mazo;
+	
+	static Jugador p1;
+	static Jugador p2;
+	
+	static Random random = new Random();
+	
 	
 	public static void main(String[] args) {
 		 
@@ -56,50 +62,129 @@ public class LoveLetter {
 	
 	}
 	
-	
-	
-
 	private static void iniciaPartida() {
 		
-		creaMazo();
-		creaOrdenAleatorio();
+		String nombreP1;
+		String nombreP2;
 		
+		//Creando al jugador que usará la persona
+		System.out.println("Por favor ingresa tu nombre");
+		nombreP1 = lectorEntrada.next();
+		p1 = new Jugador(nombreP1);
+		p1.setAutomatico(false);
+			
+		//Creando al jugador que "usará" la máquina
+		System.out.println("Ahora ingresa el nombre de tu oponente");
+		nombreP2 = lectorEntrada.next();
+		p2 = new Jugador(nombreP2);
+		p2.setAutomatico(true);
+		
+		//iniciando el menu del juego, que estará presente en todo...
+		muestraMenuPartida();
+		
+		 mazo = creaMazo();
+		
+		/** Carta[] temporal = barajear(mazo);
+		 
+		 for(int i = 0; i< 16; i++){
+			 System.out.println(mazo[i].getNombre());
+		 }**/
+		 
+		 
+		 int ordenAleatorio = ordenInicio();
+		 int controlJugadas = 0;
+		 
+		 
+		 
+		 do{
+			 if(ordenAleatorio == 1){
+				 if(controlJugadas%2 == 0){
+					 p1.jugar();
+					 controlJugadas++;
+				 }else{
+					 p2.jugar();
+					 controlJugadas++;
+				 }
+			 }if(ordenAleatorio == 2){
+				 if(controlJugadas%2 == 0){
+					 p2.jugar();
+					 controlJugadas++;
+				 }else{
+					 p1.jugar();
+					 controlJugadas++;
+				 }
+			 }
+		 }while(true);
+
+		 
+		 
+		
+			
 	}
 
 	
 
-	private static void creaMazo() {
+	private static int ordenInicio() {
+		int orden = 0;
+		int s = random.nextInt(2);
+		if(s==1){
+			orden = 1;
+			
+		}if(s==2){
+			orden = 2;
+		}
 		
-		mazo[0] = new Carta("Guardia", 1);
-		mazo[1] = new Carta("Guardia", 1);
-
-		mazo[2] = new Carta("Clerigo", 2);
-		mazo[3] = new Carta("Clerigo", 2);
-		
-		mazo[4] = new Carta("Baron", 3);
-		mazo[5] = new Carta("Baron", 3);
-
-		mazo[6] = new Carta("Doncella", 4);
-		mazo[7] = new Carta("Doncella", 4);
-		
-		mazo[8] = new Carta("Principe", 5);
-		mazo[9] = new Carta("Principe", 5);
-		
-		mazo[10] = new Carta("Rey", 6);
-		mazo[11] = new Carta("Rey", 6);
-		
-		mazo[12] = new Carta("Condesa", 7);
-		mazo[13] = new Carta("Condesa", 7);
-
-		mazo[14] = new Carta("Princesa", 8);
-		mazo[15] = new Carta("Princesa", 8);
-	}
-	
-	private static void creaOrdenAleatorio() {
+		return orden;
 		
 	}
-	
 
+	private static void muestraMenuPartida() {
+		System.out.println(p1.getNombre() + ": " + p1.getTokensJugador() + " Tokens ~~~~~~~~~~~~" + " " + p2.getNombre() + 
+				": " + p2.getTokensJugador() + " Tokens");			
+	}
+
+	private static Carta[] creaMazo() {
+		
+		Carta[] mazoOrdenado = new Carta[16]; 
+		
+		mazoOrdenado[0] = new Carta("Guardia", 1);
+		mazoOrdenado[1] = new Carta("Guardia", 1);
+		mazoOrdenado[2] = new Carta("Guardia", 1);
+		mazoOrdenado[3] = new Carta("Guardia", 1);
+		mazoOrdenado[4] = new Carta("Guardia", 1);
+		
+		mazoOrdenado[5] = new Carta("Clerigo", 2);
+		mazoOrdenado[6] = new Carta("Clerigo", 2);
+		
+		mazoOrdenado[7] = new Carta("Baron", 3);
+		mazoOrdenado[8] = new Carta("Baron", 3);
+		
+		mazoOrdenado[9] = new Carta("Doncella", 4);
+		mazoOrdenado[10] = new Carta("Doncella", 4);
+		
+		mazoOrdenado[11] = new Carta("Principe", 5);
+		mazoOrdenado[12] = new Carta("Principe", 5);
+		
+		mazoOrdenado[13] = new Carta("Rey", 6);
+		
+		mazoOrdenado[14] = new Carta("Doncella", 7);
+		
+		mazoOrdenado[15] = new Carta("Princesa", 8);
+		
+				return mazoOrdenado;
+		
+	}
+	
+	//private static Carta[] barajear(Carta[] mazoOrdenado) {
+		
+		//Carta[] mazoBarajeado = new Carta[mazoOrdenado.length];
+		
+		 
+		// return mazoBarajeado;
+		
+		
+	//}
+	
 	private static void asignaTokens() {
 		
 		System.out.println("\nUn Token es ganado cada vez que se gana un turno "
@@ -194,17 +279,11 @@ public class LoveLetter {
 
 }
 
-
-
 class Carta{
 	
 	String nombre;
 	int numero;
 
-	Carta(){
-		
-	}
-	
 	Carta(String nombre, int numero){
 		
 		this.nombre = nombre;
@@ -213,13 +292,13 @@ class Carta{
 				
 	}
 	
-	public String setNombre(){
+	public String getNombre(){
 		
 		return this.nombre;
 		
 	}
 	
-	public int setNumero(){
+	public int getNumero(){
 		
 		return this.numero;
 				
@@ -227,24 +306,47 @@ class Carta{
 	
 }
 
+class Jugador{
+	
+	String nombre;
+	boolean automatico;
+	Carta[] mano = new Carta[2];
+	int tokensJugador = 0;
+	
+	Jugador(String nombre){
+		
+		this.nombre = nombre;
+		
+	}
+	
+	public void setAutomatico(boolean automatico){//para diferenciar maquina de humano
+		
+		this.automatico = automatico;
+	}
+	
+	public int getTokensJugador(){
+		return this.tokensJugador;
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	public String getNombre(){
+		return this.nombre;
+	}
+	
+	public void jugar(){
+		
+		if(automatico = false){//cuando sea el jugador contra la máquina
+			
+		}if(automatico = true){//cuando juegue con máquina
+			
+		}
+		
+		
+		
+		
+	}
+		
+	
+}
 
 
 
