@@ -64,7 +64,7 @@ public class LoveLetter {
 	
 	}
 	
-	private static void iniciaPartida() {
+	public static void iniciaPartida() {
 		
 		String nombreP1;
 		String nombreP2;
@@ -84,50 +84,89 @@ public class LoveLetter {
 		//iniciando el menu del juego, que estará presente en todo...
 		muestraMenuPartida();
 		
-		 mazo = creaMazo();
 		
-		/** Carta[] temporal = barajear(mazo);
+		
+		
+		 int ordenAleatorio = random.nextInt(7);//crea orden aleatorio
 		 
-		 for(int i = 0; i< 16; i++){
-			 System.out.println(mazo[i].getNombre());
-		 }**/
-		 
-		 
-		 int i = 0;
-		 
-		 reparteCartas(mazo);
-		 
-		 do{
-			 if(i%2 == 0){
-				 p1.jugar1();
-				 i++;
-			 }else{
-				 p2.jugar2();
-				 i++;
-			 }
-		 }while(true);
-		 
-		 
-		 /**
-		 do{
-			 if(ordenAleatorio == 1){
-				 if(controlJugadas%2 == 0){
-					 p1.jugar();
-					 controlJugadas++;
+		 if(ordenAleatorio%2 == 0){ //si es par, inicia jugardor1
+			
+			 mazo = creaMazo();
+			 
+			 int i = 0;
+			 
+			 reparteCartas(mazo);
+			 
+			 //INICIA CICLO INFINITO DE JUEGO
+			 do{
+				 if(i%2 == 0){
+					 reparteCartas(mazo);
+					 
+					 
+					 if(p1.mano[0] != null && p1.mano[1] == null){
+						 p1.mano[1] = mazo[cartaRepartida];
+							cartaRepartida--;
+						}
+					 
+					 p1.jugar1();
+					 i++;
+					 
 				 }else{
-					 p2.jugar();
-					 controlJugadas++;
+					 reparteCartas(mazo);
+					 
+					 if(p2.mano[0] != null && p2.mano[1] == null){
+						 p2.mano[1] = mazo[cartaRepartida];
+							cartaRepartida--;
+						}
+					 
+					 
+					 p2.jugar2();
+					 i++;
 				 }
-			 }if(ordenAleatorio == 2){
-				 if(controlJugadas%2 == 0){
-					 p2.jugar();
-					 controlJugadas++;
+			 }while(true);
+			 //TERMINA CICLO INFINITO DE JUEGO
+		
+			 
+		 }else{ //Si es impar, inicia jugador 2
+			 
+			 mazo = creaMazo();
+			 
+			 int i = 0;
+			 
+			 reparteCartas(mazo);
+			 
+			 do{
+				 if(i%2 == 0){
+					 reparteCartas(mazo);
+					 
+					 
+					 if(p2.mano[0] != null && p2.mano[1] == null){
+						 p2.mano[1] = mazo[cartaRepartida];
+							cartaRepartida--;
+						}
+					 
+					 p2.jugar2();
+					 i++;
+					 
 				 }else{
-					 p1.jugar();
-					 controlJugadas++;
+					 reparteCartas(mazo);
+					 
+					 if(p1.mano[0] != null && p1.mano[1] == null){
+						 p1.mano[1] = mazo[cartaRepartida];
+							cartaRepartida--;
+						}
+					 
+					 
+					 p1.jugar1();
+					 i++;
 				 }
-			 }
-		 }while(true);**/
+			 }while(true);
+	 
+		 }
+		
+		 
+		 
+		
 
 		 
 		 
@@ -139,29 +178,42 @@ public class LoveLetter {
 
 	
 
-	private static void reparteCartas(Carta[] mazo) {
+	public static void reparteCartas(Carta[] mazo) {
 			
-		p1.mano[0] = mazo[cartaRepartida];
-		cartaRepartida--;
-		p1.mano[1] = mazo[cartaRepartida];
-		cartaRepartida--;
 		
-		p2.mano[0] = mazo[cartaRepartida];
-		cartaRepartida--;
-		p2.mano[1] = mazo[cartaRepartida];
-		cartaRepartida--;
+		if(p1.mano[0]==null && p2.mano[0] == null){
+			
+			p1.mano[0] = mazo[cartaRepartida];
+			cartaRepartida--;
+			
+			p2.mano[0] = mazo[cartaRepartida];
+			cartaRepartida--;
+			
+		}if(p1.mano[0]==null && p1.mano[1] != null){
+			
+			p1.mano[0] = p1.mano[1];
+			p1.mano[1] = null;
+			
+		}if(p2.mano[0]==null && p2.mano[1] != null){
+			
+			p2.mano[0] = p2.mano[1];
+			p2.mano[1] = null;
+			
+		}
+		
+		
 		
 		System.out.println("carta siguiente " + cartaRepartida);
 				
 		
 	}
 
-	private static void muestraMenuPartida() {
+	public static void muestraMenuPartida() {
 		System.out.println(p1.getNombre() + ": " + p1.getTokensJugador() + " Tokens ~~~~~~~~~~~~" + " " + p2.getNombre() + 
 				": " + p2.getTokensJugador() + " Tokens");			
 	}
 
-	private static Carta[] creaMazo() {
+	public static Carta[] creaMazo() {
 		
 		Carta[] mazoOrdenado = new Carta[16]; 
 		
@@ -203,7 +255,7 @@ public class LoveLetter {
 		
 	//}
 	
-	private static void asignaTokens() {
+	public static void asignaTokens() {
 		
 		System.out.println("\nUn Token es ganado cada vez que se gana un turno "
 				+ "y tu carta es enviada a la Princesa Annette. \ndetermina "
@@ -242,7 +294,7 @@ public class LoveLetter {
 		}
 	}
 
-	private static void muestraReglas() {
+	public static void muestraReglas() {
 		
 		String reglas1 = "Tras el arresto de la Reina Marianna acusada de alta traición, nadie resultó \n"
 				+ "más entristecida por la noticia que su hija la princesa Annete. Los pretendientes de\n"
@@ -323,42 +375,67 @@ class Carta{
 				
 	}
 
-	public void funcionalidad() {
+	public void funcionalidad1() {
 		
 		int numeroCartaJugada = this.numero;
 		
 		switch(numeroCartaJugada){
+		
 		case 1:
+				int numeroCartaRival = LoveLetter.p2.mano[0].getNumero();
+				
 				System.out.println("Selecciona la carta de tu rival");
 				System.out.println("(1) Guardia, (2)Clerigo, (3) Baron, (4) Doncella, (5) Principe, "
 						+ "(6) Rey, (7) Doncella, (8) Princesa " );
 				
+				int eleccion = lectorEntradaCarta.nextInt();
+				
+				if(eleccion == numeroCartaRival){
+					System.out.println("Correcto!, "+LoveLetter.p1.getNombre() + " Gana esta partida");
+					LoveLetter.p1.tokensJugador = + LoveLetter.p1.tokensJugador + 1;
+					LoveLetter.muestraMenuPartida();
+					
+				}else{
+					System.out.println("Incorrecto!");
+					LoveLetter.muestraMenuPartida();
+				}
+				
 			
 			break;
+			
 		case 2:
 			
 			String nombreCarta1 =  LoveLetter.p2.mano[0].getNombre();
 			String nombreCarta2 = LoveLetter.p2.mano[1].getNombre();
 			System.out.println("Tu oponente tiene en su mano" + nombreCarta1+ ", " +nombreCarta2 );
-			
+			LoveLetter.muestraMenuPartida();
 			break;
 			
 		case 3:
-			String nombreCarta1Propia = LoveLetter.p1.mano[0].getNombre();
-			String nombreCarta1Enemigo = LoveLetter.p2.mano[0].getNombre();
+			
+		
+			
 			int cartaPropia = LoveLetter.p1.mano[0].getNumero();
 			int cartaEnemigo = LoveLetter.p2.mano[0].getNumero();
+			
 			String mensajeGanador;
 			
-			System.out.println("Las cartas de ambos jugadores son: "+ nombreCarta1Propia + " y " + 
-			nombreCarta1Enemigo);
+			System.out.println("La mano del jugador 1 es: "+ LoveLetter.p1.mano[0].getNombre() + " (" + 
+			+ LoveLetter.p1.mano[0].getNumero() +") \n");
+			
+			System.out.println("La mano del jugador 2 es: " + LoveLetter.p2.mano[0].getNombre() + " (" + 
+			+ LoveLetter.p2.mano[0].getNumero() +") \n");
+			
+			
 			if(cartaPropia > cartaEnemigo){
 				mensajeGanador = "Tu tienes la carta más alta, tu enemigo pierde";
 				System.out.println(mensajeGanador);
+				LoveLetter.p1.tokensJugador = + LoveLetter.p1.tokensJugador + 1;
 
-			}if(cartaEnemigo < cartaPropia){
+			}if(cartaEnemigo > cartaPropia){
 				mensajeGanador = "Tu enemigo tiene la carta más alta, tu pierdes";
 				System.out.println(mensajeGanador);
+				LoveLetter.p2.tokensJugador = + LoveLetter.p2.tokensJugador + 1;
 
 				
 			}if(cartaPropia == cartaEnemigo){
@@ -367,7 +444,7 @@ class Carta{
 
 			}
 			
-			
+			LoveLetter.muestraMenuPartida();
 			
 			break;
 			
@@ -375,9 +452,11 @@ class Carta{
 			
 		case 4:
 			break;
+			
 		case 5:
 			//se dará la nueva carta al rival
 			break;
+			
 		case 6:
 			
 			Carta temp = LoveLetter.p1.mano[0];
@@ -391,15 +470,116 @@ class Carta{
 		case 7:
 
 			break;
+			
 		case 8:
 
 			System.out.println("Haz perdido el juego :'(");
+			
 			break;
 		
 		}
 		
 	}
 	
+	
+	public void funcionalidad2(){
+		int numeroCartaJugada = this.numero;
+		
+		switch(numeroCartaJugada){
+		
+		case 1:
+				int numeroCartaRival = LoveLetter.p1.mano[0].getNumero();
+				
+				Random r = new Random();
+				int eleccion = r.nextInt(8);
+							
+				if(eleccion == numeroCartaRival){
+					System.out.println("Correcto!, "+LoveLetter.p2.getNombre() + " Gana esta partida");
+					LoveLetter.p2.tokensJugador = + LoveLetter.p2.tokensJugador + 1;
+					LoveLetter.muestraMenuPartida();
+					
+				}else{
+					System.out.println("Incorrecto!");
+					LoveLetter.muestraMenuPartida();
+				}
+				
+			
+			break;
+			
+		case 2:
+			
+			String nombreCarta1 =  LoveLetter.p1.mano[0].getNombre();
+			String nombreCarta2 = LoveLetter.p1.mano[1].getNombre();
+			System.out.println("Tu oponente tiene en su mano" + nombreCarta1+ ", " +nombreCarta2 );
+			LoveLetter.muestraMenuPartida();
+			break;
+			
+		case 3:
+			
+			int cartaPropia = LoveLetter.p2.mano[0].getNumero();
+			int cartaEnemigo = LoveLetter.p1.mano[0].getNumero();
+			
+			String mensajeGanador;
+			
+			System.out.println("La mano del jugador 1 es: "+ LoveLetter.p1.mano[0].getNombre() + " (" + 
+			+ LoveLetter.p1.mano[0].getNumero() +") \n");
+			
+			System.out.println("La mano del jugador 2 es: " + LoveLetter.p2.mano[0].getNombre() + " (" + 
+			+ LoveLetter.p2.mano[0].getNumero() +") \n");
+			
+			
+			if(cartaPropia > cartaEnemigo){
+				mensajeGanador = "EL jugador 2 tiene la carta más alta, tu pierdes";
+				System.out.println(mensajeGanador);
+				LoveLetter.p2.tokensJugador = + LoveLetter.p2.tokensJugador + 1;
+
+			}if(cartaEnemigo > cartaPropia){
+				mensajeGanador = "Tu tienes la carta más alta, tu oponente pierde";
+				System.out.println(mensajeGanador);
+				LoveLetter.p1.tokensJugador = + LoveLetter.p1.tokensJugador + 1;
+
+				
+			}if(cartaPropia == cartaEnemigo){
+				mensajeGanador = " Cartas iguales, ninguno gana :(";
+				System.out.println(mensajeGanador);
+
+			}
+			
+			LoveLetter.muestraMenuPartida();
+			
+			break;
+			
+			
+			
+		case 4:
+			break;
+			
+		case 5:
+			//se dará la nueva carta al rival
+			break;
+			
+		case 6:
+			
+			Carta temp = LoveLetter.p1.mano[0];
+			Carta temp2 = LoveLetter.p2.mano[0];
+			
+			LoveLetter.p1.mano[0] = temp2;
+			LoveLetter.p2.mano[0] = temp;
+		
+			break;
+			 
+		case 7:
+
+			break;
+			
+		case 8:
+
+			System.out.println("Haz perdido el juego :'(");
+			
+			break;
+		
+		}
+	}
 }
 
 class Jugador{
@@ -433,6 +613,9 @@ class Jugador{
 	
 	public void jugar1(){
 		
+		
+		
+		
 		int eleccion;
 		String nombreCarta1 = mano[0].getNombre();
 		String nombreCarta2 = mano[1].getNombre();
@@ -441,15 +624,137 @@ class Jugador{
 		eleccion = lectorEntradaJugador.nextInt();
 		
 		if(eleccion == 1){
-			mano[0].funcionalidad();
+			mano[0].funcionalidad1();
+			mano[0] = null;
 		}if (eleccion == 2){
-			mano[1].funcionalidad();
+			mano[1].funcionalidad1();
+			mano[1] = null;
 		}if (eleccion == 3){
 			LoveLetter.menuPrincipal();
 		}
 		}
 	
 	public void jugar2(){
+		
+		
+		int numeroCarta1 = mano[0].getNumero();
+		int numeroCarta2 = mano[1].getNumero();
+		
+		if(numeroCarta1 == 8){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 8){
+			
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		if(numeroCarta1 == 7 && (numeroCarta2 == 6 || numeroCarta2 == 5)){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}if(numeroCarta2 == 7 && (numeroCarta1 == 6 || numeroCarta1 == 5)){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}
+		
+		if(numeroCarta1 == 7 && (numeroCarta2 != 6 && numeroCarta2 != 5)){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 7 && (numeroCarta1 != 6 && numeroCarta1 != 5)){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		if(numeroCarta1 == 6 && numeroCarta2 == 5){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 6 && numeroCarta1 == 5){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+			
+		}
+		
+		
+		if(numeroCarta1 == 6 && numeroCarta2 < 5){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 ==6 && numeroCarta1 < 5){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		
+		if(numeroCarta1 == 5 && numeroCarta2 == 4){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 ==5 && numeroCarta1 == 4){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		
+
+		if(numeroCarta1 == 5 && numeroCarta2 == 1){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 ==5 && numeroCarta1 == 1){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		
+		if(numeroCarta1 == 5 && (numeroCarta2 == 3 || numeroCarta2 == 2)){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}if(numeroCarta2 == 5 && (numeroCarta1 == 3 || numeroCarta1 == 2)){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}
+		
+		if(numeroCarta1 == 4 && numeroCarta2 == 4){
+			mano[numeroCarta1].funcionalidad2();
+		}
+		
+		if(numeroCarta1 == 4 && numeroCarta2 < 4){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 4 && numeroCarta1 < 4){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		
+		if(numeroCarta1 == 3 && numeroCarta2 == 3){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}
+		
+		if(numeroCarta1 == 3 && numeroCarta2 < 3){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 3 && numeroCarta1 < 3){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+		if(numeroCarta1 == 2 && numeroCarta2 == 2){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}
+		
+		if(numeroCarta1 == 2 && numeroCarta2 < 2){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}if(numeroCarta2 == 2 && numeroCarta1 < 2){
+			mano[numeroCarta1].funcionalidad2();
+			mano[0] = null;
+		}
+		
+
+		if(numeroCarta1 == 1 && numeroCarta2 == 1){
+			mano[numeroCarta2].funcionalidad2();
+			mano[1] = null;
+		}
 		
 	}
 		
