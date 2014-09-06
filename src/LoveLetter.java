@@ -15,6 +15,8 @@ public class LoveLetter {
 	
 	static Random random = new Random();
 	
+	static int cartaRepartida = 15;
+	
 	
 	public static void main(String[] args) {
 		 
@@ -71,13 +73,13 @@ public class LoveLetter {
 		System.out.println("Por favor ingresa tu nombre");
 		nombreP1 = lectorEntrada.next();
 		p1 = new Jugador(nombreP1);
-		p1.setAutomatico(false);
+		p1.setAutomatico(1);
 			
 		//Creando al jugador que "usará" la máquina
 		System.out.println("Ahora ingresa el nombre de tu oponente");
 		nombreP2 = lectorEntrada.next();
 		p2 = new Jugador(nombreP2);
-		p2.setAutomatico(true);
+		p2.setAutomatico(2);
 		
 		//iniciando el menu del juego, que estará presente en todo...
 		muestraMenuPartida();
@@ -91,11 +93,22 @@ public class LoveLetter {
 		 }**/
 		 
 		 
-		 int ordenAleatorio = ordenInicio();
-		 int controlJugadas = 0;
+		 int i = 0;
+		 
+		 reparteCartas(mazo);
+		 
+		 do{
+			 if(i%2 == 0){
+				 p1.jugar1();
+				 i++;
+			 }else{
+				 p2.jugar2();
+				 i++;
+			 }
+		 }while(true);
 		 
 		 
-		 
+		 /**
 		 do{
 			 if(ordenAleatorio == 1){
 				 if(controlJugadas%2 == 0){
@@ -114,7 +127,7 @@ public class LoveLetter {
 					 controlJugadas++;
 				 }
 			 }
-		 }while(true);
+		 }while(true);**/
 
 		 
 		 
@@ -124,17 +137,22 @@ public class LoveLetter {
 
 	
 
-	private static int ordenInicio() {
-		int orden = 0;
-		int s = random.nextInt(2);
-		if(s==1){
-			orden = 1;
+	
+
+	private static void reparteCartas(Carta[] mazo) {
 			
-		}if(s==2){
-			orden = 2;
-		}
+		p1.mano[0] = mazo[cartaRepartida];
+		cartaRepartida--;
+		p1.mano[1] = mazo[cartaRepartida];
+		cartaRepartida--;
 		
-		return orden;
+		p2.mano[0] = mazo[cartaRepartida];
+		cartaRepartida--;
+		p2.mano[1] = mazo[cartaRepartida];
+		cartaRepartida--;
+		
+		System.out.println("carta siguiente " + cartaRepartida);
+				
 		
 	}
 
@@ -283,6 +301,7 @@ class Carta{
 	
 	String nombre;
 	int numero;
+	Scanner lectorEntradaCarta = new Scanner(System.in); 
 
 	Carta(String nombre, int numero){
 		
@@ -303,15 +322,93 @@ class Carta{
 		return this.numero;
 				
 	}
+
+	public void funcionalidad() {
+		
+		int numeroCartaJugada = this.numero;
+		
+		switch(numeroCartaJugada){
+		case 1:
+				System.out.println("Selecciona la carta de tu rival");
+				System.out.println("(1) Guardia, (2)Clerigo, (3) Baron, (4) Doncella, (5) Principe, "
+						+ "(6) Rey, (7) Doncella, (8) Princesa " );
+				
+			
+			break;
+		case 2:
+			
+			String nombreCarta1 =  LoveLetter.p2.mano[0].getNombre();
+			String nombreCarta2 = LoveLetter.p2.mano[1].getNombre();
+			System.out.println("Tu oponente tiene en su mano" + nombreCarta1+ ", " +nombreCarta2 );
+			
+			break;
+			
+		case 3:
+			String nombreCarta1Propia = LoveLetter.p1.mano[0].getNombre();
+			String nombreCarta1Enemigo = LoveLetter.p2.mano[0].getNombre();
+			int cartaPropia = LoveLetter.p1.mano[0].getNumero();
+			int cartaEnemigo = LoveLetter.p2.mano[0].getNumero();
+			String mensajeGanador;
+			
+			System.out.println("Las cartas de ambos jugadores son: "+ nombreCarta1Propia + " y " + 
+			nombreCarta1Enemigo);
+			if(cartaPropia > cartaEnemigo){
+				mensajeGanador = "Tu tienes la carta más alta, tu enemigo pierde";
+				System.out.println(mensajeGanador);
+
+			}if(cartaEnemigo < cartaPropia){
+				mensajeGanador = "Tu enemigo tiene la carta más alta, tu pierdes";
+				System.out.println(mensajeGanador);
+
+				
+			}if(cartaPropia == cartaEnemigo){
+				mensajeGanador = " Cartas iguales, ninguno gana :(";
+				System.out.println(mensajeGanador);
+
+			}
+			
+			
+			
+			break;
+			
+			
+			
+		case 4:
+			break;
+		case 5:
+			//se dará la nueva carta al rival
+			break;
+		case 6:
+			
+			Carta temp = LoveLetter.p1.mano[0];
+			Carta temp2 = LoveLetter.p2.mano[0];
+			
+			LoveLetter.p1.mano[0] = temp2;
+			LoveLetter.p2.mano[0] = temp;
+		
+			break;
+			 
+		case 7:
+
+			break;
+		case 8:
+
+			System.out.println("Haz perdido el juego :'(");
+			break;
+		
+		}
+		
+	}
 	
 }
 
 class Jugador{
 	
 	String nombre;
-	boolean automatico;
+	int automatico;
 	Carta[] mano = new Carta[2];
 	int tokensJugador = 0;
+	static Scanner lectorEntradaJugador = new Scanner(System.in);
 	
 	Jugador(String nombre){
 		
@@ -319,7 +416,7 @@ class Jugador{
 		
 	}
 	
-	public void setAutomatico(boolean automatico){//para diferenciar maquina de humano
+	public void setAutomatico(int automatico){//para diferenciar maquina de humano
 		
 		this.automatico = automatico;
 	}
@@ -332,18 +429,35 @@ class Jugador{
 		return this.nombre;
 	}
 	
-	public void jugar(){
+	
+	
+	public void jugar1(){
 		
-		if(automatico = false){//cuando sea el jugador contra la máquina
-			
-		}if(automatico = true){//cuando juegue con máquina
-			
+		int eleccion;
+		String nombreCarta1 = mano[0].getNombre();
+		String nombreCarta2 = mano[1].getNombre();
+		System.out.println("Tienes en tu mano" + nombreCarta1 + ", "+ nombreCarta2);
+		System.out.println("(1) Usar carta 1\n" + "(2) Usar carta 2\n" + "(3) Termina Juego\n");
+		eleccion = lectorEntradaJugador.nextInt();
+		
+		if(eleccion == 1){
+			mano[0].funcionalidad();
+		}if (eleccion == 2){
+			mano[1].funcionalidad();
+		}if (eleccion == 3){
+			LoveLetter.menuPrincipal();
 		}
-		
-		
-		
+		}
+	
+	public void jugar2(){
 		
 	}
+		
+		
+		
+		
+		
+	
 		
 	
 }
