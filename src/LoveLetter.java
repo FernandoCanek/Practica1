@@ -107,7 +107,7 @@ public class LoveLetter {
 						 p1.mano[1] = mazo[cartaRepartida];
 							cartaRepartida--;
 						}
-					 
+					 muestraMenuPartida();
 					 p1.jugar1();
 					 i++;
 					 
@@ -119,11 +119,11 @@ public class LoveLetter {
 							cartaRepartida--;
 						}
 					 
-					 
+					 muestraMenuPartida();
 					 p2.jugar2();
 					 i++;
 				 }
-			 }while(true);
+			 }while((p1.tokensJugador<=numeroTokens)&&(p2.tokensJugador <= numeroTokens));
 			 //TERMINA CICLO INFINITO DE JUEGO
 		
 			 
@@ -144,7 +144,7 @@ public class LoveLetter {
 						 p2.mano[1] = mazo[cartaRepartida];
 							cartaRepartida--;
 						}
-					 
+					 muestraMenuPartida();
 					 p2.jugar2();
 					 i++;
 					 
@@ -156,11 +156,11 @@ public class LoveLetter {
 							cartaRepartida--;
 						}
 					 
-					 
+					 muestraMenuPartida();
 					 p1.jugar1();
 					 i++;
 				 }
-			 }while(true);
+			 }while((p1.tokensJugador<=numeroTokens)&&(p2.tokensJugador <= numeroTokens));
 	 
 		 }
 		
@@ -203,14 +203,15 @@ public class LoveLetter {
 		
 		
 		
-		System.out.println("carta siguiente " + cartaRepartida);
 				
 		
 	}
 
 	public static void muestraMenuPartida() {
 		System.out.println(p1.getNombre() + ": " + p1.getTokensJugador() + " Tokens ~~~~~~~~~~~~" + " " + p2.getNombre() + 
-				": " + p2.getTokensJugador() + " Tokens");			
+				": " + p2.getTokensJugador() + " Tokens");	
+		
+		
 	}
 
 	public static Carta[] creaMazo() {
@@ -347,6 +348,17 @@ public class LoveLetter {
 		}
 	}
 
+	public static void modoDebug() {
+		System.out.println("El mazo restante es \n");
+		for (int i = cartaRepartida; i > 0; i-- ){
+		
+			System.out.println(mazo[i].getNombre() +" "+ mazo[i].getNumero() +"\n");
+		
+		}
+		System.out.println("La mano de tu oponente es: " +p2.mano[0].getNombre() +" "+ p2.mano[0].getNumero() +"\n");
+		
+	}
+
 }
 
 class Carta{
@@ -454,17 +466,55 @@ class Carta{
 			break;
 			
 		case 5:
-			//se dará la nueva carta al rival
+			
+			System.out.println("¿Cual usuario deberá botar su carta, y tomar una nueva? \n"
+					+ "(1) Tu \n(2) Oponente\n");
+			
+			
+			LoveLetter.p1.eleccion = lectorEntradaCarta.nextInt();
+						
+			
+			if(LoveLetter.p1.eleccion == 1){
+				
+				LoveLetter.p1.mano[0] = LoveLetter.mazo[LoveLetter.cartaRepartida];
+				LoveLetter.cartaRepartida--;
+				
+			}if(LoveLetter.p1.eleccion == 2){
+			
+				LoveLetter.p2.mano[0] = LoveLetter.mazo[LoveLetter.cartaRepartida];
+				LoveLetter.cartaRepartida--;
+				
+			}
+			
+			
+			
+			
 			break;
 			
 		case 6:
 			
-			Carta temp = LoveLetter.p1.mano[0];
-			Carta temp2 = LoveLetter.p2.mano[0];
+			if(LoveLetter.p1.eleccion == 1){
+				
+				Carta temp = LoveLetter.p1.mano[1];
+				Carta temp2 = LoveLetter.p2.mano[0];
+				
+				LoveLetter.p1.mano[1] = temp2;
+				LoveLetter.p2.mano[0] = temp;
+				System.out.println("Se han intercambiado las manos!!");
+				
+			}if(LoveLetter.p1.eleccion == 2){
+				
+				Carta temp = LoveLetter.p1.mano[0];
+				Carta temp2 = LoveLetter.p2.mano[0];
+				
+				LoveLetter.p1.mano[0] = temp2;
+				LoveLetter.p2.mano[0] = temp;
+				System.out.println("Se han intercambiado las manos!!");
+
+			}
 			
-			LoveLetter.p1.mano[0] = temp2;
-			LoveLetter.p2.mano[0] = temp;
-		
+				
+			
 			break;
 			 
 		case 7:
@@ -555,17 +605,16 @@ class Carta{
 			break;
 			
 		case 5:
-			//se dará la nueva carta al rival
+
+			LoveLetter.p1.mano[0] = LoveLetter.mazo[LoveLetter.cartaRepartida];
+			LoveLetter.cartaRepartida--;
+
 			break;
 			
 		case 6:
 			
-			Carta temp = LoveLetter.p1.mano[0];
-			Carta temp2 = LoveLetter.p2.mano[0];
+			//Ninguna instrucción de la lógica de juego de la máquina indica que utilice 6
 			
-			LoveLetter.p1.mano[0] = temp2;
-			LoveLetter.p2.mano[0] = temp;
-		
 			break;
 			 
 		case 7:
@@ -589,6 +638,7 @@ class Jugador{
 	Carta[] mano = new Carta[2];
 	int tokensJugador = 0;
 	static Scanner lectorEntradaJugador = new Scanner(System.in);
+	int eleccion;
 	
 	Jugador(String nombre){
 		
@@ -616,11 +666,12 @@ class Jugador{
 		
 		
 		
-		int eleccion;
+		
 		String nombreCarta1 = mano[0].getNombre();
 		String nombreCarta2 = mano[1].getNombre();
 		System.out.println("Tienes en tu mano" + nombreCarta1 + ", "+ nombreCarta2);
-		System.out.println("(1) Usar carta 1\n" + "(2) Usar carta 2\n" + "(3) Termina Juego\n");
+		System.out.println("(1) Usar carta 1\n" + "(2) Usar carta 2\n" + "(3) Termina Juego\n" + 
+				"(4) ...Modo Debug...");
 		eleccion = lectorEntradaJugador.nextInt();
 		
 		if(eleccion == 1){
@@ -631,6 +682,8 @@ class Jugador{
 			mano[1] = null;
 		}if (eleccion == 3){
 			LoveLetter.menuPrincipal();
+		}if (eleccion == 4){
+			LoveLetter.modoDebug();
 		}
 		}
 	
@@ -649,13 +702,13 @@ class Jugador{
 			mano[0] = null;
 		}
 		
-		if(numeroCarta1 == 7 && (numeroCarta2 == 6 || numeroCarta2 == 5)){
+		/**if(numeroCarta1 == 7 && (numeroCarta2 == 6 || numeroCarta2 == 5)){
 			mano[numeroCarta1].funcionalidad2();
 			mano[0] = null;
 		}if(numeroCarta2 == 7 && (numeroCarta1 == 6 || numeroCarta1 == 5)){
 			mano[numeroCarta2].funcionalidad2();
 			mano[1] = null;
-		}
+		}**/
 		
 		if(numeroCarta1 == 7 && (numeroCarta2 != 6 && numeroCarta2 != 5)){
 			mano[numeroCarta2].funcionalidad2();
